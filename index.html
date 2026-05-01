@@ -385,7 +385,6 @@ let score = 0, combo = 0, maxCombo = 0;
 let judgeEff = null;
 let laneEff = [null,null,null,null];
 let animId;
-let selectedBgm = 'default'; // 'default' | 'rabbit' | 'shiroima'
 let clearCount = 0;    // クリア回数
 
 // ============================================================
@@ -487,20 +486,15 @@ async function onStartClick() {
 
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-    if (audioFile) {
-        const buf = await audioFile.arrayBuffer();
+    // デフォルトBGMをランダムで選んで読み込む
+    try {
+        const bgmList = [DEFAULT_BGM, DEFAULT_BGM_RABBIT, DEFAULT_BGM_SHIROIMA];
+        const selected = bgmList[Math.floor(Math.random() * bgmList.length)];
+        const res = await fetch(selected);
+        const buf = await res.arrayBuffer();
         audioBuffer = await audioCtx.decodeAudioData(buf);
-    } else {
-        // デフォルトBGMをランダムで選んで読み込む
-        try {
-            const bgmList = [DEFAULT_BGM, DEFAULT_BGM_RABBIT, DEFAULT_BGM_SHIROIMA];
-            const selected = bgmList[Math.floor(Math.random() * bgmList.length)];
-            const res = await fetch(selected);
-            const buf = await res.arrayBuffer();
-            audioBuffer = await audioCtx.decodeAudioData(buf);
-        } catch(e) {
-            audioBuffer = null;
-        }
+    } catch(e) {
+        audioBuffer = null;
     }
 
     await runCountdown();
