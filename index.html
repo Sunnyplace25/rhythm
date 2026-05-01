@@ -490,9 +490,11 @@ async function onStartClick() {
     try {
         const bgmList = [DEFAULT_BGM, DEFAULT_BGM_RABBIT, DEFAULT_BGM_SHIROIMA];
         const selected = bgmList[Math.floor(Math.random() * bgmList.length)];
-        const res = await fetch(selected);
-        const buf = await res.arrayBuffer();
-        audioBuffer = await audioCtx.decodeAudioData(buf);
+        const base64 = selected.split(',')[1];
+        const binary = atob(base64);
+        const bytes = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+        audioBuffer = await audioCtx.decodeAudioData(bytes.buffer);
     } catch(e) {
         audioBuffer = null;
     }
