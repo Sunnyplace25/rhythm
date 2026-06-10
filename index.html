@@ -487,6 +487,7 @@ async function onStartClick() {
     hitEffects = [];
 
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') await audioCtx.resume();
 
     // デフォルトBGMをランダムで選んで読み込む
     try {
