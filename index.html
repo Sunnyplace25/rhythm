@@ -487,7 +487,13 @@ async function onStartClick() {
     hitEffects = [];
 
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    if (audioCtx.state === 'suspended') await audioCtx.resume();
+    // iOS unlock: ジェスチャー内で無音バッファを同期再生してAudioContextを解放
+    const _silBuf = audioCtx.createBuffer(1, 1, 22050);
+    const _silSrc = audioCtx.createBufferSource();
+    _silSrc.buffer = _silBuf;
+    _silSrc.connect(audioCtx.destination);
+    _silSrc.start(0);
+    if (audioCtx.state === 'suspended') audioCtx.resume(); // fire-and-forget
 
     // デフォルトBGMをランダムで選んで読み込む
     try {
