@@ -493,7 +493,7 @@ async function onStartClick() {
     _silSrc.buffer = _silBuf;
     _silSrc.connect(audioCtx.destination);
     _silSrc.start(0);
-    if (audioCtx.state === 'suspended') audioCtx.resume(); // fire-and-forget
+    if (audioCtx.state === 'suspended') await audioCtx.resume();
 
     // デフォルトBGMをランダムで選んで読み込む
     try {
